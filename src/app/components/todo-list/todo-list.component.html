@@ -1,0 +1,40 @@
+<h3 class="app-header">To Do App</h3>
+
+<div class="radioBtn">
+  <span *ngFor="let tag of tags">
+          <input type="radio" class="radioBtn" value="{{tag}}" name="tagName" [(ngModel)]="todoTag" required>
+          <label class="radioLabel">{{tag}}</label>
+  </span>
+</div>
+
+<input type="text" class="todo-input" placeholder="What needs to be done" [(ngModel)]="todoTitle" (keyup.enter)="addTodo()">
+
+<div class="extra-container">
+  <div>
+    <button [ngClass]="{'active': filter === 'active'}" (click)="filter='active'">Active</button>
+    <button [ngClass]="{'active': filter === 'completed'}" (click)="filter='completed'">Completed</button>
+  </div>
+</div>
+
+<div>
+  <!-- Search form -->
+  <input class="form-control" type="text" placeholder="Search" aria-label="Search" [(ngModel)]="searchString">
+</div>
+
+<div class="todo-item todoLabel" *ngFor="let todo of todosFiltered()" @fade>
+  <div class="todo-item-left col-md-4">
+    <input type="checkbox" *ngIf="!todo.completed" [(ngModel)]="todo.completed" (change)="doneEdit(todo)">
+    <div *ngIf="!todo.editing; else editingTodo" class="todo-item-label" [ngClass]="{ 'completed' : todo.completed }" (dblclick)="editTodo(todo)">{{ todo.title }}</div>
+    <ng-template #editingTodo>
+      <input type="text" class="todo-item-edit" [(ngModel)]="todo.title" (blur)="doneEdit(todo)" (keyup.enter)="doneEdit(todo)" (keyup.esc)="cancelEdit(todo)"autofocus>
+    </ng-template>
+  </div>
+  <div class="col-md-4" [class]="todo.tag.toLocaleLowerCase()">{{todo.tag}}</div>
+  <input type="button" class="btn btn-primary btn-sm" value="Change Tag" (click)="changeTag(todo)">
+  <div class="remove-item" (click)="deleteTodo(todo.id)">
+    &times;
+  </div>
+</div>
+
+
+
